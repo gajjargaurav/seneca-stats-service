@@ -1,0 +1,23 @@
+{
+  "name": "seneca-stats-service",
+  "version": "1.0.0",
+  "description": "get stats on course sessions",
+  "keywords": [
+    "courses",
+    "stats",
+    "seneca"
+  ],
+  "license": "ISC",
+  "author": "Gaurav Gajjar",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@shelf/jest-dynamodb": "^1.7.0",
+    "aws-sdk": "^2.844.0",
+    "jest": "^26.6.3",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^6.8.0"
+  }
+}

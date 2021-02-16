@@ -1,0 +1,100 @@
+service: seneca-stats-service
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: eu-west-2
+  profile: serverless-admin
+  environment:
+    tableName: ${self:custom.tableName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: '*'
+  apiGateway:
+    shouldStartNameWithService: true
+
+plugins: 
+  - serverless-dynamodb-local
+  - serverless-offline
+
+package:
+  individually: true
+
+custom:
+  tableName: course-stats-table
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+    migration:
+      dir: offline/migrations
+
+functions:
+  captureCourseProgress:
+    handler: lambdas/courses/captureCourseProgress.handler
+    events:
+      - http:
+          path: courses/{courseId}
+          method: POST
+          cors: true
+          integration: lambda
+          request:
+            parameters:
+              headers:
+                X-User-Id: true
+              paths:
+                courseId: true
+  getCourseStats:
+    handler: lambdas/courses/getCourseStats.handler
+    events:
+      - http:
+          path: courses/{courseId}
+          method: GET
+          cors: true
+          integration: lambda
+          request:
+            parameters:
+              headers:
+                X-User-Id: true
+              paths:
+                courseId: true
+  getSessionStats:
+    handler: lambdas/courses/getSessionStats.handler
+    events:
+      - http:
+          path: courses/{courseId}/sessions/{sessionId}
+          method: GET
+          cors: true
+          integration: lambda
+          request:
+            parameters:
+              headers:
+                X-User-Id: true
+              paths:
+                courseId: true
+                sessionId: true
+resources:
+    Resources:
+      SenecaCourseStatsTable:
+        Type: 'AWS::DynamoDB::Table'
+        Properties:
+          TableName: ${self:custom.tableName}
+          AttributeDefinitions:
+            - AttributeName: id
+              AttributeType: S
+            - AttributeName: sk
+              AttributeType: S
+          KeySchema:
+            - AttributeName: id
+              KeyType: HASH
+            - AttributeName: sk
+              KeyType: RANGE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
