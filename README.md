@@ -52,10 +52,10 @@ It uses nodejs with [Serverless Framework](https://www.serverless.com/) and [AWS
 
 2. Run `serverless config credentials --provider aws --key xxx --secret yyy -profile serverless-admin`
 
-    > NOTE:  
-Replace `xxx` with your `Access key ID` and `yyy` with your `Secret access key`.
 
-    > If you used any other user name instead of `serverless-admin` then please update the above command accordingly to reflect that. We have used `serverless-admin` for the purposes of this exercise
+    > NOTE: Replace `xxx` with your `Access key ID` and `yyy` with your `Secret access key`
+
+    > If you used any other user name instead of `serverless-admin` then please update the above command accordingly to reflect that. We have used `serverless-admin` for the purposes of this exercise. if you do so please update `profile` and `region` in `serverless.yml` to ensure that correct profile and region is used. 
 
 3. Ensure that all dependencies are installed via `npm i` as they will need to be packaged up.
 
